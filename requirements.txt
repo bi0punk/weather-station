@@ -1,0 +1,6 @@
+flask
+mysql-connector-python
+prettytable
+colorama
+termcolor
+python-dotenv

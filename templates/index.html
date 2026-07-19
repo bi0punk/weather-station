@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Station - Datos del Sensor</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.datatables.net/2.0.8/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Estacion Meteorologica</h1>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h2>Sensor Exterior (DHT22)</h2>
+            </div>
+            <div class="card-body">
+                <table id="table-dht22" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Temperatura (°C)</th>
+                            <th>Humedad (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data_dht22 %}
+                            <tr>
+                                <td>{{ row['Fecha'] }}</td>
+                                <td>{{ row['Temperatura (°C)'] }}</td>
+                                <td>{{ row['Humedad (%)'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Sensor Interior (DHT11)</h2>
+            </div>
+            <div class="card-body">
+                <table id="table-dht11" class="table table-striped table-bordered" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>Fecha</th>
+                            <th>Temperatura (°C)</th>
+                            <th>Humedad (%)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in data_dht11 %}
+                            <tr>
+                                <td>{{ row['Fecha'] }}</td>
+                                <td>{{ row['Temperatura (°C)'] }}</td>
+                                <td>{{ row['Humedad (%)'] }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/2.0.8/js/jquery.dataTables.min.js"></script>
+    <script src="https://datatables.net/2.0.8/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#table-dht22').DataTable({
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "lengthChange": true,
+                "pageLength": 10
+            });
+            $('#table-dht11').DataTable({
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "lengthChange": true,
+                "pageLength": 10
+            });
+        });
+    </script>
+</body>
+</html>
