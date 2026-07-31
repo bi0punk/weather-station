@@ -1,6 +1,6 @@
-flask
-mysql-connector-python
-prettytable
-colorama
-termcolor
-python-dotenv
+flask==3.0.3
+mysql-connector-python==9.1.0
+prettytable==3.11.0
+colorama==0.4.6
+termcolor==2.5.0
+python-dotenv==1.1.1
