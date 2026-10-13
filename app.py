@@ -1,12 +1,13 @@
-import os
-import datetime
 import csv
-from flask import Flask, request, render_template
-from prettytable import PrettyTable
-from colorama import init, Fore, Style
+import datetime
+import os
+
 import mysql.connector
-from mysql.connector import Error
+from colorama import Fore, Style, init
 from dotenv import load_dotenv
+from flask import Flask, render_template, request
+from mysql.connector import Error
+from prettytable import PrettyTable
 
 load_dotenv()
 
@@ -25,7 +26,7 @@ if not MYSQL_PASSWORD:
 
 def read_csv_data(filename):
     try:
-        with open(f'data/{filename}', 'r') as f:
+        with open(f"data/{filename}") as f:
             return list(csv.DictReader(f))
     except FileNotFoundError:
         return []
@@ -71,8 +72,14 @@ def datos_sensor():
         data = request.json
         print(data)
 
-        if 'temperatura_dht22' not in data or 'humedad_dht22' not in data or 'temperatura_dht11' not in data or 'humedad_dht11' not in data:
-            return 'Datos incompletos', 400
+        required_keys = (
+            "temperatura_dht22",
+            "humedad_dht22",
+            "temperatura_dht11",
+            "humedad_dht11",
+        )
+        if not all(k in data for k in required_keys):
+            return "Datos incompletos", 400
 
         fecha_hora_actual = datetime.datetime.now()
         fecha_hora_formateada = fecha_hora_actual.strftime("%Y-%m-%d %H:%M:%S")
@@ -83,9 +90,16 @@ def datos_sensor():
         humedad_dht11 = data['humedad_dht11']
 
         table = PrettyTable()
-        table.field_names = [Fore.BLUE + 'Sensor', Fore.BLUE + 'Temperatura (°C)', Fore.BLUE + 'Humedad (%)' + Style.RESET_ALL]
-        table.add_row(['Exterior', f'{Fore.GREEN}{temperatura_dht22:.1f}', f'{Fore.GREEN}{humedad_dht22:.1f}' + Style.RESET_ALL])
-        table.add_row(['Interior', f'{Fore.CYAN}{temperatura_dht11:.1f}', f'{Fore.CYAN}{humedad_dht11:.1f}' + Style.RESET_ALL])
+        campo_sensor = Fore.BLUE + "Sensor"
+        campo_temp = Fore.BLUE + "Temperatura (°C)"
+        campo_humedad = Fore.BLUE + "Humedad (%)" + Style.RESET_ALL
+        table.field_names = [campo_sensor, campo_temp, campo_humedad]
+        ext_temp = f"{Fore.GREEN}{temperatura_dht22:.1f}"
+        ext_hum = f"{Fore.GREEN}{humedad_dht22:.1f}" + Style.RESET_ALL
+        int_temp = f"{Fore.CYAN}{temperatura_dht11:.1f}"
+        int_hum = f"{Fore.CYAN}{humedad_dht11:.1f}" + Style.RESET_ALL
+        table.add_row(["Exterior", ext_temp, ext_hum])
+        table.add_row(["Interior", int_temp, int_hum])
         print(table)
 
         data_dht22 = {
